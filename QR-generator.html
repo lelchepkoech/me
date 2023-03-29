@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+      <link rel="shortcut icon" class="icon" type="x-icon" href="ctn.png">
+    <meta charset="utf-8">
+    <title>QR GENERATOR | Cosname</title>
+    <link rel="stylesheet" href="style-nav.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome CDN Link for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  </head>
+  <body>
+       <nav class="navbar">
+    <div class="wrapper-nav">
+      <div class="icon"><i id="left" class="fa-solid fa-angle-left"></i></div>
+      <ul class="tabs-box">
+        <li class="tab"><a href="home.html">Home</a></li>
+        <li class="tab "><a href="Alarm.html">Set Alarm</a></li>
+        <li class="tab"><a href="Color-palette-generator.html">Color Palette Generator</a></li>
+        <li class="tab"><a href="image-Editor.html">Image Editor</a></li>
+        <li class="tab active"><a href="QR-generator.html">QR Generator</a></li>
+        <li class="tab"><a href="Quiz-Application.html">Quiz Generator</a></li>
+        <li class="tab"><a href="Random-password.html">Random Password</a></li>
+        <li class="tab"><a href="Random-quote.html">Daily Qoute</a></li>
+        <li class="tab"><a href="calculator.html">Calculator</a></li>
+        <li class="tab"><a href="#">Programming</a></li>
+        <li class="tab"><a href="#">History</a></li>
+        <li class="tab"><a href="#">Gaming</a></li>
+        <li class="tab"><a href="#">Share Market</a></li>
+        <li class="tab"><a href="#">Smartphones</a></li>
+      </ul>
+      <div class="icon"><i id="right" class="fa-solid fa-angle-right"></i></div>
+    </div>
+</nav>
+ <section class="QR-generator">
+ <div class="wrapper-qr">
+      <header>
+        <h1>QR Code Generator</h1>
+        <p>Paste a url or enter text to create QR code</p>
+      </header>
+      <div class="form-qr">
+        <input type="text" spellcheck="false" placeholder="Enter text or url">
+        <button>Generate QR Code</button>
+      </div>
+      <div class="qr-code">
+        <img src="" alt="qr-code">
+      </div>
+    </div>
+
+ </section>
+  </body>
+    
+   <script>
+     const wrapper = document.querySelector(".wrapper-qr"),
+qrInput = wrapper.querySelector(".form input"),
+generateBtn = wrapper.querySelector(".form button"),
+qrImg = wrapper.querySelector(".qr-code img");
+let preValue;
+
+generateBtn.addEventListener("click", () => {
+    let qrValue = qrInput.value.trim();
+    if(!qrValue || preValue === qrValue) return;
+    preValue = qrValue;
+    generateBtn.innerText = "Generating QR Code...";
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrValue}`;
+    qrImg.addEventListener("load", () => {
+        wrapper.classList.add("active");
+        generateBtn.innerText = "Generate QR Code";
+    });
+});
+
+qrInput.addEventListener("keyup", () => {
+    if(!qrInput.value.trim()) {
+        wrapper.classList.remove("active");
+        preValue = "";
+    }
+});
+    </script>
+       
+    
+    
+    
+    <script>
+    const tabsBox = document.querySelector(".tabs-box"),
+allTabs = tabsBox.querySelectorAll(".tab"),
+arrowIcons = document.querySelectorAll(".icon i");
+
+let isDragging = false;
+
+const handleIcons = (scrollVal) => {
+    let maxScrollableWidth = tabsBox.scrollWidth - tabsBox.clientWidth;
+    arrowIcons[0].parentElement.style.display = scrollVal <= 0 ? "none" : "flex";
+    arrowIcons[1].parentElement.style.display = maxScrollableWidth - scrollVal <= 1 ? "none" : "flex";
+}
+
+arrowIcons.forEach(icon => {
+    icon.addEventListener("click", () => {
+        // if clicked icon is left, reduce 350 from tabsBox scrollLeft else add
+        let scrollWidth = tabsBox.scrollLeft += icon.id === "left" ? -340 : 340;
+        handleIcons(scrollWidth);
+    });
+});
+
+allTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabsBox.querySelector(".active").classList.remove("active");
+        tab.classList.add("active");
+    });
+});
+
+const dragging = (e) => {
+    if(!isDragging) return;
+    tabsBox.classList.add("dragging");
+    tabsBox.scrollLeft -= e.movementX;
+    handleIcons(tabsBox.scrollLeft)
+}
+
+const dragStop = () => {
+    isDragging = false;
+    tabsBox.classList.remove("dragging");
+}
+
+tabsBox.addEventListener("mousedown", () => isDragging = true);
+tabsBox.addEventListener("mousemove", dragging);
+document.addEventListener("mouseup", dragStop);
+    </script>
+</html>

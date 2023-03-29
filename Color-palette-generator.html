@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
+<html lang="en" dir="ltr">
+  <head>
+      <link rel="shortcut icon" class="icon" type="x-icon" href="ctn.png">
+    <meta charset="utf-8">
+    <title>Colour Palette Generator | Cosname</title>
+    <link rel="stylesheet" href="style-nav.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome CDN Link for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  </head>
+  <body>
+       <nav class="navbar">
+    <div class="wrapper-nav">
+      <div class="icon"><i id="left" class="fa-solid fa-angle-left"></i></div>
+      <ul class="tabs-box">
+        <li class="tab"><a href="home.html">Home</a></li>
+        <li class="tab"><a href="Alarm.html">Set Alarm</a></li>
+        <li class="tab active"><a href="Color-palette-generator.html">Color Palette Generator</a></li>
+        <li class="tab"><a href="image-Editor.html">Image Editor</a></li>
+        <li class="tab"><a href="QR-generator.html">QR Generator</a></li>
+        <li class="tab"><a href="Quiz-Application.html">Quiz Generator</a></li>
+        <li class="tab"><a href="Random-password.html">Random Password</a></li>
+        <li class="tab"><a href="Random-quote.html">Daily Qoute</a></li>
+        <li class="tab"><a href="calculator.html">Calculator</a></li>
+        <li class="tab"><a href="#">Programming</a></li>
+        <li class="tab"><a href="#">History</a></li>
+        <li class="tab"><a href="#">Gaming</a></li>
+        <li class="tab"><a href="#">Share Market</a></li>
+        <li class="tab"><a href="#">Smartphones</a></li>
+      </ul>
+      <div class="icon"><i id="right" class="fa-solid fa-angle-right"></i></div>
+    </div>
+</nav>
+      
+      
+ <section class="colour-palette">
+ <ul class="container-colour"></ul>
+    <button class="refresh-btn">Refresh Palette</button>     
+ </section>
+  </body>
+    
+   <script>
+      const container = document.querySelector(".container-colour");
+const refreshBtn = document.querySelector(".refresh-btn");
+
+const maxPaletteBoxes = 32;
+
+const generatePalette = () => {
+    container.innerHTML = ""; // clearing the container
+    for (let i = 0; i < maxPaletteBoxes; i++) {
+        // generating a random hex color code
+        let randomHex = Math.floor(Math.random() * 0xffffff).toString(16);
+        randomHex = `#${randomHex.padStart(6, "0")}`;
+        
+        // creating a new 'li' element and inserting it to the container
+        const color = document.createElement("li");
+        color.classList.add("color");
+        color.innerHTML = `<div class="rect-box" style="background: ${randomHex}"></div>
+                           <span class="hex-value">${randomHex}</span>`;
+        // adding click event to current li element to copy the color
+        color.addEventListener("click", () => copyColor(color, randomHex));
+        container.appendChild(color);
+    }
+}
+generatePalette();
+
+const copyColor = (elem, hexVal) => {
+    const colorElement = elem.querySelector(".hex-value");
+    // Copying the hex value, updating the text to copied, 
+    // and changing text back to original hex value after 1 second
+    navigator.clipboard.writeText(hexVal).then(() => {
+        colorElement.innerText = "Copied";
+        setTimeout(() => colorElement.innerText = hexVal, 1000);
+    }).catch(() => alert("Failed to copy the color code!")); // showing alert if color can't be copied
+}
+
+refreshBtn.addEventListener("click", generatePalette);
+    </script>
+       
+    
+    
+    
+    <script>
+    const tabsBox = document.querySelector(".tabs-box"),
+allTabs = tabsBox.querySelectorAll(".tab"),
+arrowIcons = document.querySelectorAll(".icon i");
+
+let isDragging = false;
+
+const handleIcons = (scrollVal) => {
+    let maxScrollableWidth = tabsBox.scrollWidth - tabsBox.clientWidth;
+    arrowIcons[0].parentElement.style.display = scrollVal <= 0 ? "none" : "flex";
+    arrowIcons[1].parentElement.style.display = maxScrollableWidth - scrollVal <= 1 ? "none" : "flex";
+}
+
+arrowIcons.forEach(icon => {
+    icon.addEventListener("click", () => {
+        // if clicked icon is left, reduce 350 from tabsBox scrollLeft else add
+        let scrollWidth = tabsBox.scrollLeft += icon.id === "left" ? -340 : 340;
+        handleIcons(scrollWidth);
+    });
+});
+
+allTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabsBox.querySelector(".active").classList.remove("active");
+        tab.classList.add("active");
+    });
+});
+
+const dragging = (e) => {
+    if(!isDragging) return;
+    tabsBox.classList.add("dragging");
+    tabsBox.scrollLeft -= e.movementX;
+    handleIcons(tabsBox.scrollLeft)
+}
+
+const dragStop = () => {
+    isDragging = false;
+    tabsBox.classList.remove("dragging");
+}
+
+tabsBox.addEventListener("mousedown", () => isDragging = true);
+tabsBox.addEventListener("mousemove", dragging);
+document.addEventListener("mouseup", dragStop);
+    </script>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+      <link rel="shortcut icon" class="icon" type="x-icon" href="ctn.png">
+    <meta charset="utf-8">
+    <title>SET ALARM | COSNAME </title>
+    <link rel="stylesheet" href="style-nav.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome CDN Link for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  </head>
+  <body>
+      <nav class="navbar">
+    <div class="wrapper-nav">
+      <div class="icon"><i id="left" class="fa-solid fa-angle-left"></i></div>
+      <ul class="tabs-box">
+        <li class="tab"><a href="home.html">Home</a></li>
+        <li class="tab active"><a href="Alarm.html">Set Alarm</a></li>
+        <li class="tab"><a href="Color-palette-generator.html">Color Palette Generator</a></li>
+        <li class="tab"><a href="image-Editor.html">Image Editor</a></li>
+        <li class="tab"><a href="QR-generator.html">QR Generator</a></li>
+        <li class="tab"><a href="Quiz-Application.html">Quiz Generator</a></li>
+        <li class="tab"><a href="Random-password.html">Random Password</a></li>
+        <li class="tab"><a href="Random-quote.html">Daily Qoute</a></li>
+        <li class="tab"><a href="calculator.html">Calculator</a></li>
+        <li class="tab"><a href="#">Programming</a></li>
+        <li class="tab"><a href="#">History</a></li>
+        <li class="tab"><a href="#">Gaming</a></li>
+        <li class="tab"><a href="#">Share Market</a></li>
+        <li class="tab"><a href="#">Smartphones</a></li>
+      </ul>
+      <div class="icon"><i id="right" class="fa-solid fa-angle-right"></i></div>
+    </div>
+</nav>
+ 
+      
+      
+       <section class="clock"> 
+    <div class="wrapper-clock">
+      <img src="./media/clock.avif" alt="clock">
+      <h1>00:00:00 PM</h1>
+      <div class="content">
+        <div class="column">
+          <select>
+            <option value="Hour" selected disabled hidden>Hour</option>
+          </select>
+        </div>
+        <div class="column">
+          <select>
+            <option value="Minute" selected disabled hidden>Minute</option>
+          </select>
+        </div>
+        <div class="column">
+          <select>
+            <option value="AM/PM" selected disabled hidden>AM/PM</option>
+          </select>
+        </div>
+      </div>
+      <button>Set Alarm</button>
+    </div>   
+</section>
+      
+      
+  </body>
+    
+   <script>
+      const currentTime = document.querySelector("h1"),
+content = document.querySelector(".content"),
+selectMenu = document.querySelectorAll("select"),
+setAlarmBtn = document.querySelector("button");
+
+let alarmTime, isAlarmSet,
+ringtone = new Audio("./media/ringtone.mp3");
+
+for (let i = 12; i > 0; i--) {
+    i = i < 10 ? `0${i}` : i;
+    let option = `<option value="${i}">${i}</option>`;
+    selectMenu[0].firstElementChild.insertAdjacentHTML("afterend", option);
+}
+
+for (let i = 59; i >= 0; i--) {
+    i = i < 10 ? `0${i}` : i;
+    let option = `<option value="${i}">${i}</option>`;
+    selectMenu[1].firstElementChild.insertAdjacentHTML("afterend", option);
+}
+
+for (let i = 2; i > 0; i--) {
+    let ampm = i == 1 ? "AM" : "PM";
+    let option = `<option value="${ampm}">${ampm}</option>`;
+    selectMenu[2].firstElementChild.insertAdjacentHTML("afterend", option);
+}
+
+setInterval(() => {
+    let date = new Date(),
+    h = date.getHours(),
+    m = date.getMinutes(),
+    s = date.getSeconds(),
+    ampm = "AM";
+    if(h >= 12) {
+        h = h - 12;
+        ampm = "PM";
+    }
+    h = h == 0 ? h = 12 : h;
+    h = h < 10 ? "0" + h : h;
+    m = m < 10 ? "0" + m : m;
+    s = s < 10 ? "0" + s : s;
+    currentTime.innerText = `${h}:${m}:${s} ${ampm}`;
+
+    if (alarmTime === `${h}:${m} ${ampm}`) {
+        ringtone.play();
+        ringtone.loop = true;
+    }
+});
+
+function setAlarm() {
+    if (isAlarmSet) {
+        alarmTime = "";
+        ringtone.pause();
+        content.classList.remove("disable");
+        setAlarmBtn.innerText = "Set Alarm";
+        return isAlarmSet = false;
+    }
+
+    let time = `${selectMenu[0].value}:${selectMenu[1].value} ${selectMenu[2].value}`;
+    if (time.includes("Hour") || time.includes("Minute") || time.includes("AM/PM")) {
+        return alert("Please, select a valid time to set Alarm!");
+    }
+    alarmTime = time;
+    isAlarmSet = true;
+    content.classList.add("disable");
+    setAlarmBtn.innerText = "Clear Alarm";
+}
+
+setAlarmBtn.addEventListener("click", setAlarm);
+    </script>
+       
+    
+    
+    
+    <script>
+    const tabsBox = document.querySelector(".tabs-box"),
+allTabs = tabsBox.querySelectorAll(".tab"),
+arrowIcons = document.querySelectorAll(".icon i");
+
+let isDragging = false;
+
+const handleIcons = (scrollVal) => {
+    let maxScrollableWidth = tabsBox.scrollWidth - tabsBox.clientWidth;
+    arrowIcons[0].parentElement.style.display = scrollVal <= 0 ? "none" : "flex";
+    arrowIcons[1].parentElement.style.display = maxScrollableWidth - scrollVal <= 1 ? "none" : "flex";
+}
+
+arrowIcons.forEach(icon => {
+    icon.addEventListener("click", () => {
+        // if clicked icon is left, reduce 350 from tabsBox scrollLeft else add
+        let scrollWidth = tabsBox.scrollLeft += icon.id === "left" ? -340 : 340;
+        handleIcons(scrollWidth);
+    });
+});
+
+allTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabsBox.querySelector(".active").classList.remove("active");
+        tab.classList.add("active");
+    });
+});
+
+const dragging = (e) => {
+    if(!isDragging) return;
+    tabsBox.classList.add("dragging");
+    tabsBox.scrollLeft -= e.movementX;
+    handleIcons(tabsBox.scrollLeft)
+}
+
+const dragStop = () => {
+    isDragging = false;
+    tabsBox.classList.remove("dragging");
+}
+
+tabsBox.addEventListener("mousedown", () => isDragging = true);
+tabsBox.addEventListener("mousemove", dragging);
+document.addEventListener("mouseup", dragStop);
+    </script>
+</html>

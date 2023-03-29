@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+      <link rel="shortcut icon" class="icon" type="x-icon" href="ctn.png">
+    <meta charset="utf-8">
+    <title>MATH CALCULATOR | Cosname</title>
+    <link rel="stylesheet" href="style-nav.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome CDN Link for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+      <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  </head>
+  <body>
+       <nav class="navbar">
+    <div class="wrapper-nav">
+      <div class="icon"><i id="left" class="fa-solid fa-angle-left"></i></div>
+      <ul class="tabs-box">
+        <li class="tab"><a href="home.html">Home</a></li>
+        <li class="tab"><a href="Alarm.html">Set Alarm</a></li>
+        <li class="tab"><a href="Color-palette-generator.html">Color Palette Generator</a></li>
+        <li class="tab"><a href="image-Editor.html">Image Editor</a></li>
+        <li class="tab"><a href="QR-generator.html">QR Generator</a></li>
+        <li class="tab"><a href="Quiz-Application.html">Quiz Generator</a></li>
+        <li class="tab"><a href="Random-password.html">Random Password</a></li>
+        <li class="tab"><a href="Random-quote.html">Daily Qoute</a></li>
+        <li class="tab active"><a href="calculator.html">Calculator</a></li>
+        <li class="tab"><a href="#">Programming</a></li>
+        <li class="tab"><a href="#">History</a></li>
+        <li class="tab"><a href="#">Gaming</a></li>
+        <li class="tab"><a href="#">Share Market</a></li>
+        <li class="tab"><a href="#">Smartphones</a></li>
+      </ul>
+      <div class="icon"><i id="right" class="fa-solid fa-angle-right"></i></div>
+    </div>
+</nav>
+ <section class="calculator">
+   <div class="center">
+         <form name="forms">
+            <input type="text" id="display" name="display" disabled>
+            <div class="buttons">
+               <input type="button" id="seven" value="7">
+               <input type="button" id="eight" value="8">
+               <input type="button" id="nine" value="9">
+               <input type="button" id="divide" value="/"><br>
+               <input type="button" id="four" value="4">
+               <input type="button" id="five" value="5">
+               <input type="button" id="six" value="6">
+               <input type="button" id="multi" value="*"><br>
+               <input type="button" id="one" value="1">
+               <input type="button" id="two" value="2">
+               <input type="button" id="three" value="3">
+               <input type="button" id="subs" value="-"><br>
+               <input type="button" id="dot" value=".">
+               <input type="button" id="zero" value="0">
+               <input type="button" id="add" value="+">
+               <input type="button" id="clear" value="C"><br>
+               <input type="button" id="equal" value="=">
+            </div>
+         </form>
+      </div>
+
+ </section>
+  </body>
+  
+          <script>
+         $(document).ready(function(){
+           $('#one').click(function(){
+             document.forms.display.value += 1;
+           });
+           $('#two').click(function(){
+             document.forms.display.value += 2;
+           });
+           $('#three').click(function(){
+             document.forms.display.value += 3;
+           });
+           $('#four').click(function(){
+             document.forms.display.value += 4;
+           });
+           $('#five').click(function(){
+             document.forms.display.value += 5;
+           });
+           $('#six').click(function(){
+             document.forms.display.value += 6;
+           });
+           $('#seven').click(function(){
+             document.forms.display.value += 7;
+           });
+           $('#eight').click(function(){
+             document.forms.display.value += 8;
+           });
+           $('#nine').click(function(){
+             document.forms.display.value += 9;
+           });
+           $('#zero').click(function(){
+             document.forms.display.value += 0;
+           });
+           $('#add').click(function(){
+             document.forms.display.value += '+';
+           });
+           $('#subs').click(function(){
+             document.forms.display.value += '-';
+           });
+           $('#multi').click(function(){
+             document.forms.display.value += '*';
+           });
+           $('#divide').click(function(){
+             document.forms.display.value += '/';
+           });
+           $('#dot').click(function(){
+             document.forms.display.value += '.';
+           });
+           $('#equal').click(function(){
+             if (display.value == "") {
+               alert("Please enter any numbers to calculate!");
+             }else{
+               document.forms.display.value =
+               eval(document.forms.display.value);
+             }
+           });
+           $('#clear').click(function(){
+             document.forms.display.value = "";
+           });
+         })
+      </script>
+    
+    
+    <script>
+    const tabsBox = document.querySelector(".tabs-box"),
+allTabs = tabsBox.querySelectorAll(".tab"),
+arrowIcons = document.querySelectorAll(".icon i");
+
+let isDragging = false;
+
+const handleIcons = (scrollVal) => {
+    let maxScrollableWidth = tabsBox.scrollWidth - tabsBox.clientWidth;
+    arrowIcons[0].parentElement.style.display = scrollVal <= 0 ? "none" : "flex";
+    arrowIcons[1].parentElement.style.display = maxScrollableWidth - scrollVal <= 1 ? "none" : "flex";
+}
+
+arrowIcons.forEach(icon => {
+    icon.addEventListener("click", () => {
+        // if clicked icon is left, reduce 350 from tabsBox scrollLeft else add
+        let scrollWidth = tabsBox.scrollLeft += icon.id === "left" ? -340 : 340;
+        handleIcons(scrollWidth);
+    });
+});
+
+allTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabsBox.querySelector(".active").classList.remove("active");
+        tab.classList.add("active");
+    });
+});
+
+const dragging = (e) => {
+    if(!isDragging) return;
+    tabsBox.classList.add("dragging");
+    tabsBox.scrollLeft -= e.movementX;
+    handleIcons(tabsBox.scrollLeft)
+}
+
+const dragStop = () => {
+    isDragging = false;
+    tabsBox.classList.remove("dragging");
+}
+
+tabsBox.addEventListener("mousedown", () => isDragging = true);
+tabsBox.addEventListener("mousemove", dragging);
+document.addEventListener("mouseup", dragStop);
+    </script>
+</html>
